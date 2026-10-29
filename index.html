@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRAZA//CO2 - Cuenta de Resultados | Miguel Ángel Layunta López</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d231a">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            900: '#071610',
+                            800: '#0d231a',
+                            700: '#133526',
+                            600: '#1b4d37',
+                            500: '#266e4e',
+                            400: '#38946b',
+                            300: '#52b589',
+                            200: '#81d4b0',
+                            100: '#bceade',
+                            50: '#e6f7f1',
+                            accent: '#d97736' // Naranja caldera de la tarjeta
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+
+    <!-- Header / Navbar -->
+    <header class="bg-brand-800 border-b border-brand-700 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-lg">
+        <div class="flex items-center space-x-3">
+            <button id="sidebarToggle" class="text-brand-300 hover:text-white p-2 rounded-lg hover:bg-brand-700 transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-3">
+                <!-- Logotipo extraído de la tarjeta -->
+                <div class="w-10 h-10 rounded-lg bg-brand-700 border border-brand-500/50 flex items-center justify-center overflow-hidden shadow-inner p-1">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-brand-300" fill="currentColor">
+                        <rect x="10" y="20" width="15" height="65" fill="#38946b"/>
+                        <rect x="30" y="35" width="15" height="50" fill="#266e4e"/>
+                        <rect x="50" y="15" width="15" height="70" fill="#52b589"/>
+                        <rect x="70" y="45" width="20" height="15" fill="#d97736"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wider text-white flex items-center gap-2">
+                        TRAZA<span class="text-brand-300">//</span>CO<sub>2</sub>
+                        <span class="text-xs bg-brand-700 text-brand-200 px-2 py-0.5 rounded-full border border-brand-600">WMS</span>
+                    </h1>
+                    <p class="text-xs text-brand-300">Sistemas de Trazabilidad Carbono Logística S.O</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <div class="hidden md:flex flex-col text-right">
+                <span class="text-xs font-semibold text-white">Miguel Ángel Layunta López</span>
+                <span class="text-[10px] text-brand-300">mlayuntalopez@gmail.com | 698 910 833</span>
+            </div>
+            <div class="w-9 h-9 rounded-full bg-brand-600 border border-brand-400 flex items-center justify-center text-white font-bold text-sm shadow">
+                M
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 relative">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="bg-brand-800 border-r border-brand-700 w-64 flex-shrink-0 hidden md:block transition-all duration-300 z-40">
+            <div class="p-4 space-y-6">
+                <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-wider px-3 mb-2">Módulos Financieros</p>
+                    <a href="#dashboard" onclick="switchTab('dashboard')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-brand-700 text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-chart-pie w-5 text-brand-300"></i>
+                        <span>Dashboard BI</span>
+                    </a>
+                    <a href="#pyl" onclick="switchTab('pyl')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg text-brand-200 hover:bg-brand-700 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-file-invoice-dollar w-5 text-brand-300"></i>
+                        <span>PyG Multianual</span>
+                    </a>
+                    <a href="#ocr" onclick="switchTab('ocr')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg text-brand-200 hover:bg-brand-700 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-receipt w-5 text-brand-300"></i>
+                        <span>OCR Inteligente</span>
+                    </a>
+                    <a href="#bank" onclick="switchTab('bank')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg text-brand-200 hover:bg-brand-700 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-building-columns w-5 text-brand-300"></i>
+                        <span>Open Banking</span>
+                    </a>
+                    <a href="#forecast" onclick="switchTab('forecast')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg text-brand-200 hover:bg-brand-700 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-chart-line w-5 text-brand-300"></i>
+                        <span>Forecast & What-if</span>
+                    </a>
+                    <a href="#governance" onclick="switchTab('governance')" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg text-brand-200 hover:bg-brand-700 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-shield-halved w-5 text-brand-300"></i>
+                        <span>Gobierno & Multi-entidad</span>
+                    </a>
+                </div>
+
+                <div class="pt-4 border-t border-brand-700">
+                    <p class="text-[10px] font-bold text-brand-400 uppercase tracking-wider px-3 mb-2">Propietario / Datos</p>
+                    <div class="px-3 py-2 rounded-lg bg-brand-900/50 border border-brand-700 text-xs space-y-1 text-brand-200">
+                        <p class="font-bold text-white"><i class="fa-solid fa-user-tie mr-1.5 text-brand-accent"></i> Miguel Ángel Layunta</p>
+                        <p class="truncate"><i class="fa-solid fa-envelope mr-1.5"></i> mlayuntalopez@gmail.com</p>
+                        <p><i class="fa-solid fa-phone mr-1.5"></i> 698 910 833</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto">
+            
+            <!-- TAB 1: DASHBOARD BI -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">Panel de Control Financiero</h2>
+                        <p class="text-sm text-brand-200">Cuenta de resultados en tiempo real y KPIs críticos para TRAZA//CO2.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select id="periodSelector" onchange="updateDashboard()" class="bg-brand-900 border border-brand-600 text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand-400">
+                            <option value="2026">Ejercicio 2026</option>
+                            <option value="2025">Ejercicio 2025</option>
+                        </select>
+                        <button onclick="exportReport()" class="bg-brand-accent hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-file-pdf"></i> Exportar Informe
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-brand-800 p-5 rounded-2xl border border-brand-700 shadow-md relative overflow-hidden">
+                        <div class="absolute right-3 top-3 text-brand-600 text-3xl opacity-30"><i class="fa-solid fa-fire"></i></div>
+                        <p class="text-xs font-semibold text-brand-300 uppercase">Burn Rate (Caja)</p>
+                        <h3 class="text-2xl font-black text-white mt-1">12.450 € <span class="text-xs font-normal text-red-400">/mes</span></h3>
+                        <p class="text-xs text-brand-200 mt-2"><i class="fa-solid fa-arrow-trend-down text-emerald-400 mr-1"></i> -3.2% vs mes anterior</p>
+                    </div>
+
+                    <div class="bg-brand-800 p-5 rounded-2xl border border-brand-700 shadow-md relative overflow-hidden">
+                        <div class="absolute right-3 top-3 text-brand-600 text-3xl opacity-30"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <p class="text-xs font-semibold text-brand-300 uppercase">Punto de Equilibrio</p>
+                        <h3 class="text-2xl font-black text-white mt-1">45.000 € <span class="text-xs font-normal text-brand-200">facturados</span></h3>
+                        <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-circle-check mr-1"></i> Superado (Actual: 68k€)</p>
+                    </div>
+
+                    <div class="bg-brand-800 p-5 rounded-2xl border border-brand-700 shadow-md relative overflow-hidden">
+                        <div class="absolute right-3 top-3 text-brand-600 text-3xl opacity-30"><i class="fa-solid fa-percent"></i></div>
+                        <p class="text-xs font-semibold text-brand-300 uppercase">Margen EBITDA</p>
+                        <h3 class="text-2xl font-black text-white mt-1">34.8%</h3>
+                        <p class="text-xs text-brand-200 mt-2"><i class="fa-solid fa-arrow-trend-up text-emerald-400 mr-1"></i> +4.5% YoY</p>
+                    </div>
+
+                    <div class="bg-brand-800 p-5 rounded-2xl border border-brand-700 shadow-md relative overflow-hidden">
+                        <div class="absolute right-3 top-3 text-brand-600 text-3xl opacity-30"><i class="fa-solid fa-wallet"></i></div>
+                        <p class="text-xs font-semibold text-brand-300 uppercase">Beneficio Neto</p>
+                        <h3 class="text-2xl font-black text-white mt-1">142.800 €</h3>
+                        <p class="text-xs text-brand-200 mt-2"><i class="fa-solid fa-calendar-days mr-1">Acumulado anual</i></p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                        <h3 class="font-bold text-lg text-white mb-4 flex items-center justify-between">
+                            <span>Evolución Mensual (Ingresos vs Gastos)</span>
+                            <span class="text-xs font-normal text-brand-300">Devengo</span>
+                        </h3>
+                        <div class="h-72">
+                            <canvas id="evolutionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                        <h3 class="font-bold text-lg text-white mb-4 flex items-center justify-between">
+                            <span>Distribución de Costes por Categoría</span>
+                            <span class="text-xs font-normal text-brand-300">Analítica</span>
+                        </h3>
+                        <div class="h-72">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: PyG MULTIANUAL -->
+            <div id="tab-pyl" class="tab-content hidden space-y-6">
+                <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">Cuenta de Pérdidas y Ganancias (PyG)</h2>
+                        <p class="text-sm text-brand-200">Estructura estricta con opción de criterio de Devengo vs Caja.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleAccountingBasis('devengo')" id="btnDevengo" class="px-4 py-2 rounded-lg text-xs font-bold bg-brand-500 text-white shadow">Devengo</button>
+                        <button onclick="toggleAccountingBasis('caja')" id="btnCaja" class="px-4 py-2 rounded-lg text-xs font-bold bg-brand-700 text-brand-200">Criterio de Caja</button>
+                    </div>
+                </div>
+
+                <div class="bg-brand-800 rounded-2xl border border-brand-700 shadow-xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-brand-900 text-brand-300 text-xs uppercase border-b border-brand-700">
+                                    <th class="p-4">Concepto Financiero</th>
+                                    <th class="p-4 text-right">Q1 2026</th>
+                                    <th class="p-4 text-right">Q2 2026</th>
+                                    <th class="p-4 text-right">Q3 2026</th>
+                                    <th class="p-4 text-right">Q4 2026 (Est.)</th>
+                                    <th class="p-4 text-right text-white">Total Anual</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-brand-700 text-sm">
+                                <tr class="hover:bg-brand-700/50">
+                                    <td class="p-4 font-semibold text-white">1. Cifra de Negocios (Ventas WMS / Consultoría CO2)</td>
+                                    <td class="p-4 text-right">145.000 €</td>
+                                    <td class="p-4 text-right">160.000 €</td>
+                                    <td class="p-4 text-right">155.000 €</td>
+                                    <td class="p-4 text-right">180.000 €</td>
+                                    <td class="p-4 text-right font-bold text-emerald-400">640.000 €</td>
+                                </tr>
+                                <tr class="hover:bg-brand-700/50">
+                                    <td class="p-4 text-brand-200 pl-8">(-) Costes Directos de Venta / Operativa</td>
+                                    <td class="p-4 text-right text-red-300">-42.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-45.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-43.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-50.000 €</td>
+                                    <td class="p-4 text-right font-semibold text-red-300">-180.000 €</td>
+                                </tr>
+                                <tr class="bg-brand-700/30 font-bold text-white">
+                                    <td class="p-4">= MARGEN BRUTO</td>
+                                    <td class="p-4 text-right">103.000 €</td>
+                                    <td class="p-4 text-right">115.000 €</td>
+                                    <td class="p-4 text-right">112.000 €</td>
+                                    <td class="p-4 text-right">130.000 €</td>
+                                    <td class="p-4 text-right text-emerald-400">460.000 €</td>
+                                </tr>
+                                <tr class="hover:bg-brand-700/50">
+                                    <td class="p-4 text-brand-200 pl-8">(-) Costes de Personal y Consultores</td>
+                                    <td class="p-4 text-right text-red-300">-50.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-52.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-52.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-56.000 €</td>
+                                    <td class="p-4 text-right font-semibold text-red-300">-210.000 €</td>
+                                </tr>
+                                <tr class="hover:bg-brand-700/50">
+                                    <td class="p-4 text-brand-200 pl-8">(-) Gastos Generales y Marketing</td>
+                                    <td class="p-4 text-right text-red-300">-15.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-18.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-16.000 €</td>
+                                    <td class="p-4 text-right text-red-300">-20.000 €</td>
+                                    <td class="p-4 text-right font-semibold text-red-300">-69.000 €</td>
+                                </tr>
+                                <tr class="bg-brand-700/50 font-extrabold text-white">
+                                    <td class="p-4">= EBITDA</td>
+                                    <td class="p-4 text-right">38.000 €</td>
+                                    <td class="p-4 text-right">45.000 €</td>
+                                    <td class="p-4 text-right">44.000 €</td>
+                                    <td class="p-4 text-right">54.000 €</td>
+                                    <td class="p-4 text-right text-emerald-400">181.000 €</td>
+                                </tr>
+                                <tr class="hover:bg-brand-700/50">
+                                    <td class="p-4 text-brand-200 pl-8">(-) Amortizaciones e Intereses</td>
+                                    <td class="p-4 text-right text-red-300">-9.500 €</td>
+                                    <td class="p-4 text-right text-red-300">-9.500 €</td>
+                                    <td class="p-4 text-right text-red-300">-9.500 €</td>
+                                    <td class="p-4 text-right text-red-300">-9.800 €</td>
+                                    <td class="p-4 text-right font-semibold text-red-300">-38.300 €</td>
+                                </tr>
+                                <tr class="bg-brand-900 font-black text-white text-base">
+                                    <td class="p-4">= BENEFICIO NETO</td>
+                                    <td class="p-4 text-right">28.500 €</td>
+                                    <td class="p-4 text-right">35.500 €</td>
+                                    <td class="p-4 text-right">34.500 €</td>
+                                    <td class="p-4 text-right">44.200 €</td>
+                                    <td class="p-4 text-right text-emerald-400 text-lg">142.700 €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: OCR INTELIGENTE -->
+            <div id="tab-ocr" class="tab-content hidden space-y-6">
+                <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                    <h2 class="text-2xl font-extrabold text-white">Escáner OCR Inteligente de Facturas</h2>
+                    <p class="text-sm text-brand-200">Sube una factura o recibo para extraer automáticamente importes, impuestos y proveedor.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl flex flex-col items-center justify-center border-dashed border-2 border-brand-500/60 text-center cursor-pointer hover:bg-brand-700/30 transition min-h-[300px]" onclick="simulateOCR()">
+                        <div class="w-16 h-16 rounded-full bg-brand-700 flex items-center justify-center text-brand-300 text-2xl mb-4 shadow">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-lg">Arrastra tu factura aquí o haz clic</h3>
+                        <p class="text-xs text-brand-200 mt-1">Soporta PDF, PNG, JPG (Extracción instantánea con IA)</p>
+                        <button class="mt-6 bg-brand-500 hover:bg-brand-400 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow transition">
+                            Simular Escaneo OCR
+                        </button>
+                    </div>
+
+                    <div id="ocrResultCard" class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl flex flex-col justify-between hidden">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-white text-base"><i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i>Factura Procesada con Éxito</h3>
+                                <span class="text-xs bg-emerald-900 text-emerald-200 px-2.5 py-1 rounded-full border border-emerald-700 font-semibold">99.4% Confianza</span>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between border-b border-brand-700 pb-2">
+                                    <span class="text-brand-300">Proveedor:</span>
+                                    <span class="font-semibold text-white">EcoLogistics Solutions S.L.</span>
+                                </div>
+                                <div class="flex justify-between border-b border-brand-700 pb-2">
+                                    <span class="text-brand-300">NIF / CIF:</span>
+                                    <span class="font-semibold text-white">B-58291042</span>
+                                </div>
+                                <div class="flex justify-between border-b border-brand-700 pb-2">
+                                    <span class="text-brand-300">Base Imponible:</span>
+                                    <span class="font-semibold text-white">1.250,00 €</span>
+                                </div>
+                                <div class="flex justify-between border-b border-brand-700 pb-2">
+                                    <span class="text-brand-300">IVA (21%):</span>
+                                    <span class="font-semibold text-white">262,50 €</span>
+                                </div>
+                                <div class="flex justify-between font-bold text-base text-white pt-1">
+                                    <span>Total Factura:</span>
+                                    <span class="text-emerald-400">1.512,50 €</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="alert('Factura integrada correctamente en el centro de coste de Logística.');" class="mt-6 w-full bg-brand-600 hover:bg-brand-500 text-white py-2.5 rounded-xl text-sm font-bold shadow transition">
+                            Integrar en Contabilidad Analítica
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: OPEN BANKING -->
+            <div id="tab-bank" class="tab-content hidden space-y-6">
+                <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                    <h2 class="text-2xl font-extrabold text-white">Conciliación Bancaria Open Banking</h2>
+                    <p class="text-sm text-brand-200">Sincronización directa en tiempo real con cuentas corporativas.</p>
+                </div>
+
+                <div class="bg-brand-800 rounded-2xl border border-brand-700 shadow-xl overflow-hidden">
+                    <div class="p-5 border-b border-brand-700 flex justify-between items-center">
+                        <h3 class="font-bold text-white">Movimientos Bancarios Recientes</h3>
+                        <span class="text-xs bg-emerald-900 text-emerald-200 px-3 py-1 rounded-full border border-emerald-700 flex items-center gap-1.5 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Conectado (BBVA / Santander)
+                        </span>
+                    </div>
+                    <div class="divide-y divide-brand-700 text-sm">
+                        <div class="p-4 flex items-center justify-between hover:bg-brand-700/30">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-900/50 border border-emerald-600 flex items-center justify-center text-emerald-400 font-bold">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Cobro Cliente - Green Supply Chain S.A.</p>
+                                    <p class="text-xs text-brand-300">Ref: FCT-2026-089 • Hoy, 10:24</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-black text-emerald-400">+4.850,00 €</span>
+                                <p class="text-[10px] text-emerald-300 font-semibold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 mt-1 inline-block">Conciliado Automático</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 flex items-center justify-between hover:bg-brand-700/30">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-red-900/50 border border-red-600 flex items-center justify-center text-red-400 font-bold">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-white">Pago Proveedor - Cloud Server AWS</p>
+                                    <p class="text-xs text-brand-300">Ref: REC-9012 • Ayer, 18:00</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-black text-red-300">-640,00 €</span>
+                                <p class="text-[10px] text-emerald-300 font-semibold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 mt-1 inline-block">Conciliado Automático</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: FORECAST & WHAT-IF -->
+            <div id="tab-forecast" class="tab-content hidden space-y-6">
+                <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                    <h2 class="text-2xl font-extrabold text-white">Simulador de Escenarios (What-if Forecast)</h2>
+                    <p class="text-sm text-brand-200">Modifica las variables para simular el impacto inmediato en el Beneficio Neto de TRAZA//CO2.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl space-y-5 lg:col-span-1">
+                        <h3 class="font-bold text-white text-base">Parámetros de Simulación</h3>
+                        
+                        <div class="space-y-2">
+                            <label class="text-xs text-brand-300 flex justify-between">
+                                <span>Variación de Ventas / Ingresos</span>
+                                <span id="salesVarVal" class="font-bold text-white">+0%</span>
+                            </label>
+                            <input type="range" min="-20" max="30" value="0" class="w-full accent-brand-400" id="salesSlider" oninput="runSimulation()">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs text-brand-300 flex justify-between">
+                                <span>Variación Costes de Personal</span>
+                                <span id="costVarVal" class="font-bold text-white">+0%</span>
+                            </label>
+                            <input type="range" min="-10" max="25" value="0" class="w-full accent-brand-400" id="costSlider" oninput="runSimulation()">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs text-brand-300 flex justify-between">
+                                <span>Inflación / Gastos Generales</span>
+                                <span id="infVarVal" class="font-bold text-white">+0%</span>
+                            </label>
+                            <input type="range" min="-5" max="15" value="0" class="w-full accent-brand-400" id="infSlider" oninput="runSimulation()">
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl lg:col-span-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-white text-base mb-4">Resultado Simulado del Ejercicio</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                <div class="bg-brand-900 p-4 rounded-xl border border-brand-700">
+                                    <p class="text-xs text-brand-300">Ingresos Proyectados</p>
+                                    <h4 id="simSales" class="text-xl font-black text-white mt-1">640.000 €</h4>
+                                </div>
+                                <div class="bg-brand-900 p-4 rounded-xl border border-brand-700">
+                                    <p class="text-xs text-brand-300">Beneficio Neto Simulado</p>
+                                    <h4 id="simNet" class="text-xl font-black text-emerald-400 mt-1">142.700 €</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-brand-700/30 p-4 rounded-xl border border-brand-600/50 text-xs text-brand-200">
+                            <i class="fa-solid fa-lightbulb text-brand-accent mr-1"></i> <strong>Análisis IA:</strong> El modelo muestra alta resiliencia ante aumentos moderados de costes gracias al margen operativo de los sistemas WMS de carbono.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: GOBIERNO & MULTI-ENTIDAD -->
+            <div id="tab-governance" class="tab-content hidden space-y-6">
+                <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl">
+                    <h2 class="text-2xl font-extrabold text-white">Gobierno Corporativo y Multi-entidad</h2>
+                    <p class="text-sm text-brand-200">Control de accesos granulares y consolidación de sociedades para Miguel Ángel Layunta López.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl space-y-4">
+                        <h3 class="font-bold text-white text-base"><i class="fa-solid fa-users-gear text-brand-300 mr-2"></i> Sociedades Consolidadas</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3 rounded-xl bg-brand-900 border border-brand-700 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-white">TRAZA//CO2 S.L. (Sede Central)</p>
+                                    <p class="text-xs text-brand-300">Moneda: EUR (€) • España</p>
+                                </div>
+                                <span class="text-xs bg-emerald-900 text-emerald-200 px-2.5 py-1 rounded-full font-semibold border border-emerald-700">Consolidado (100%)</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-brand-900 border border-brand-700 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-white">Trazabilidad Carbono Latam SpA</p>
+                                    <p class="text-xs text-brand-300">Moneda: USD ($) • Chile / Latam</p>
+                                </div>
+                                <span class="text-xs bg-emerald-900 text-emerald-200 px-2.5 py-1 rounded-full font-semibold border border-emerald-700">Consolidado (100%)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-800 p-6 rounded-2xl border border-brand-700 shadow-xl space-y-4">
+                        <h3 class="font-bold text-white text-base"><i class="fa-solid fa-lock text-brand-300 mr-2"></i> Roles y Permisos de Usuario</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3 rounded-xl bg-brand-900 border border-brand-700 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-white">Miguel Ángel Layunta López</p>
+                                    <p class="text-xs text-brand-300">Propietario / Director General (CFO)</p>
+                                </div>
+                                <span class="text-xs bg-brand-600 text-white px-2.5 py-1 rounded-full font-semibold">Acceso Total</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-brand-900 border border-brand-700 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-white">Departamento de Consultoría WMS</p>
+                                    <p class="text-xs text-brand-300">Costes y Proyectos específicos</p>
+                                </div>
+                                <span class="text-xs bg-brand-700 text-brand-200 px-2.5 py-1 rounded-full font-semibold">Restringido</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-800 border-t border-brand-700 py-4 px-6 text-center text-xs text-brand-300">
+        TRAZA//CO2 WMS &copy; 2026. Todos los derechos reservados. Propietario: <strong>Miguel Ángel Layunta López</strong>.
+    </footer>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Tab switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-link').forEach(el => {
+                el.classList.remove('bg-brand-700', 'text-white');
+                el.classList.add('text-brand-200');
+            });
+            event.currentTarget.classList.add('bg-brand-700', 'text-white');
+            event.currentTarget.classList.remove('text-brand-200');
+
+            // Resize charts if switching to dashboard
+            if(tabId === 'dashboard') {
+                evolutionChart.resize();
+                costChart.resize();
+            }
+        }
+
+        // Sidebar mobile toggle
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+
+        // OCR Simulation
+        function simulateOCR() {
+            const card = document.getElementById('ocrResultCard');
+            card.classList.remove('hidden');
+        }
+
+        // Accounting Basis toggle
+        function toggleAccountingBasis(basis) {
+            if(basis === 'devengo') {
+                document.getElementById('btnDevengo').className = 'px-4 py-2 rounded-lg text-xs font-bold bg-brand-500 text-white shadow';
+                document.getElementById('btnCaja').className = 'px-4 py-2 rounded-lg text-xs font-bold bg-brand-700 text-brand-200';
+            } else {
+                document.getElementById('btnCaja').className = 'px-4 py-2 rounded-lg text-xs font-bold bg-brand-500 text-white shadow';
+                document.getElementById('btnDevengo').className = 'px-4 py-2 rounded-lg text-xs font-bold bg-brand-700 text-brand-200';
+            }
+        }
+
+        // What-if Simulation
+        function runSimulation() {
+            const salesVar = parseInt(document.getElementById('salesSlider').value);
+            const costVar = parseInt(document.getElementById('costSlider').value);
+            const infVar = parseInt(document.getElementById('infSlider').value);
+
+            document.getElementById('salesVarVal').innerText = (salesVar >= 0 ? '+' : '') + salesVar + '%';
+            document.getElementById('costVarVal').innerText = (costVar >= 0 ? '+' : '') + costVar + '%';
+            document.getElementById('infVarVal').innerText = (infVar >= 0 ? '+' : '') + infVar + '%';
+
+            const baseSales = 640000;
+            const baseNet = 142700;
+
+            const newSales = baseSales * (1 + salesVar / 100);
+            const impactNet = baseNet + (baseSales * (salesVar / 100)) - (baseNet * (costVar / 100)) - (50000 * (infVar / 100));
+
+            document.getElementById('simSales').innerText = Math.round(newSales).toLocaleString() + ' €';
+            document.getElementById('simNet').innerText = Math.round(impactNet).toLocaleString() + ' €';
+        }
+
+        function exportReport() {
+            alert('Generando informe ejecutivo oficial en formato PDF para TRAZA//CO2...');
+        }
+
+        // Charts Initialization
+        let evolutionChart, costChart;
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx1 = document.getElementById('evolutionChart').getContext('2d');
+            evolutionChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [
+                        { label: 'Ingresos (€)', data: [45000, 48000, 52000, 53000, 55000, 52000, 50000, 48000, 57000, 60000, 62000, 58000], backgroundColor: '#38946b', borderRadius: 4 },
+                        { label: 'Gastos (€)', data: [30000, 31000, 33000, 34000, 35000, 33000, 32000, 31000, 36000, 38000, 39000, 37000], backgroundColor: '#d97736', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#bceade', font: { size: 11 } } } },
+                    scales: {
+                        x: { ticks: { color: '#bceade' }, grid: { color: 'rgba(27, 77, 55, 0.3)' } },
+                        y: { ticks: { color: '#bceade' }, grid: { color: 'rgba(27, 77, 55, 0.3)' } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('costChart').getContext('2d');
+            costChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Personal y Consultores', 'Costes Directos WMS', 'Gastos Generales', 'Marketing & Ventas', 'Amortizaciones'],
+                    datasets: [{
+                        data: [210, 180, 45, 24, 38.3],
+                        backgroundColor: ['#266e4e', '#38946b', '#52b589', '#d97736', '#81d4b0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#bceade', font: { size: 10 }, boxWidth: 12 } } }
+                }
+            });
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => console.log('Service Worker registrado con éxito.'));
+        }
+    </script>
+</body>
+</html>
